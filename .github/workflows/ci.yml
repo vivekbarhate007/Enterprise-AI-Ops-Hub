@@ -27,4 +27,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r backend/requirements.txt
-      - run: pytest backend/tests
+      - run: python -m pytest backend/tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
