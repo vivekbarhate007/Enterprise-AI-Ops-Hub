@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-ops-api
+  labels:
+    app: ai-ops-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ai-ops-api
+  template:
+    metadata:
+      labels:
+        app: ai-ops-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/example/enterprise-ai-ops-api:latest
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-ops-api
+spec:
+  selector:
+    app: ai-ops-api
+  ports:
+    - port: 80
+      targetPort: 8000

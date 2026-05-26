@@ -1,0 +1,17 @@
+{
+  "name": "enterprise-ai-ops-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise AI operations platform with agent orchestration, RAG, streaming observability, and human approval workflows.",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "dev:all": "bash scripts/dev-all.sh",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "api": ".venv/bin/uvicorn backend.app.main:app --host 127.0.0.1 --reload --port 8000",
+    "test": "npm --prefix frontend run typecheck && pytest backend/tests"
+  },
+  "workspaces": [
+    "frontend"
+  ]
+}

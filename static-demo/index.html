@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Enterprise AI Ops Hub</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #eef4ff;
+        background: #080b10;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 22% 10%, rgba(46, 196, 182, 0.13), transparent 28rem),
+          radial-gradient(circle at 78% 8%, rgba(255, 209, 102, 0.1), transparent 26rem),
+          linear-gradient(145deg, #07090d 0%, #0f151d 46%, #10151a 100%);
+      }
+      button, input { font: inherit; }
+      button { border: 0; cursor: pointer; }
+      .shell { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh; }
+      .sidebar {
+        position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 28px;
+        padding: 24px; border-right: 1px solid rgba(255,255,255,.08);
+        background: rgba(7,10,15,.78); backdrop-filter: blur(22px);
+      }
+      .brand, .tenant, .nav button, .topbar, .actions, .metric, .section-title, .agent-head, .flow, .event-meta, .approval-actions {
+        display: flex; align-items: center;
+      }
+      .brand { gap: 12px; }
+      .mark, .avatar {
+        display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px;
+        background: linear-gradient(135deg, #24c6a9, #4d91ff); color: #071013; font-weight: 950;
+      }
+      .brand strong { display: block; }
+      .muted, .brand span, .tenant span, .agent p, .event p, .approval p, .source span { color: #94a3b8; }
+      .brand span, .tenant span { font-size: 12px; }
+      .nav { display: grid; gap: 7px; }
+      .nav button {
+        gap: 11px; min-height: 42px; padding: 0 12px; border-radius: 10px; background: transparent;
+        color: #9fb0c8; text-align: left;
+      }
+      .nav button:first-child, .nav button:hover { background: rgba(255,255,255,.08); color: #fff; }
+      .tenant {
+        gap: 12px; margin-top: auto; padding: 14px; border: 1px solid rgba(255,255,255,.09);
+        border-radius: 14px; background: rgba(255,255,255,.05);
+      }
+      .workspace { padding: 28px; }
+      .topbar { justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+      .eyebrow {
+        margin: 0 0 7px; color: #2ec4b6; font-size: 12px; font-weight: 900;
+        letter-spacing: .08em; text-transform: uppercase;
+      }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { max-width: 780px; margin-bottom: 0; font-size: clamp(32px, 5vw, 58px); line-height: 1.02; letter-spacing: 0; }
+      h2 { max-width: 760px; margin-bottom: 16px; font-size: clamp(28px, 4vw, 46px); line-height: 1.05; letter-spacing: 0; }
+      h3 { margin-bottom: 0; font-size: 18px; letter-spacing: 0; }
+      .actions { gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+      .search {
+        display: flex; align-items: center; gap: 8px; min-width: 260px; height: 42px; padding: 0 12px;
+        border: 1px solid rgba(255,255,255,.1); border-radius: 10px; background: rgba(255,255,255,.06);
+      }
+      .search input { width: 100%; border: 0; outline: 0; background: transparent; color: #fff; }
+      .btn, .icon {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px;
+        padding: 0 14px; border-radius: 10px; font-weight: 900;
+      }
+      .btn.primary { background: #2ec4b6; color: #04100f; }
+      .btn.secondary, .icon { border: 1px solid rgba(255,255,255,.11); background: rgba(255,255,255,.06); color: #fff; }
+      .icon { width: 42px; padding: 0; }
+      .hero-grid, .content-grid { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(340px,.65fr); gap: 18px; }
+      .hero, .insight, .panel, .metric {
+        border: 1px solid rgba(255,255,255,.1); background: rgba(14,20,29,.78);
+        box-shadow: 0 24px 70px rgba(0,0,0,.28); backdrop-filter: blur(18px);
+      }
+      .hero {
+        min-height: 360px; padding: 34px; border-radius: 18px;
+        background:
+          linear-gradient(135deg, rgba(46,196,182,.2), rgba(18,27,39,.94)),
+          linear-gradient(45deg, rgba(255,255,255,.08) 25%, transparent 25% 50%, rgba(255,255,255,.05) 50% 75%, transparent 75%);
+        background-size: auto, 32px 32px;
+      }
+      .hero p { max-width: 680px; margin-bottom: 30px; color: #94a3b8; font-size: 16px; line-height: 1.7; }
+      .status {
+        display: inline-flex; align-items: center; gap: 9px; margin-bottom: 32px; padding: 8px 11px;
+        border: 1px solid rgba(101,228,215,.28); border-radius: 999px; background: rgba(46,196,182,.1);
+        color: #c7fffa; font-size: 13px; font-weight: 900;
+      }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: #2ec4b6; box-shadow: 0 0 0 7px rgba(46,196,182,.14); }
+      .flow { gap: 10px; flex-wrap: wrap; }
+      .chip, .capability {
+        display: inline-flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.1);
+        border-radius: 10px; background: rgba(255,255,255,.07); color: #d9e6f7; font-size: 13px; font-weight: 900;
+      }
+      .insight, .panel { padding: 22px; border-radius: 16px; }
+      .panel-head { display: flex; justify-content: space-between; margin-bottom: 26px; }
+      .panel-head strong { color: #ffd166; }
+      .bar { overflow: hidden; height: 9px; margin: 22px 0; border-radius: 999px; background: rgba(255,255,255,.08); }
+      .bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #2ec4b6, #ffd166); }
+      .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin: 18px 0; }
+      .metric { align-items: flex-start; min-height: 150px; padding: 20px; border-radius: 16px; flex-direction: column; }
+      .metric strong { display: block; margin-top: 18px; font-size: 30px; }
+      .metric small { color: #65e4d7; }
+      .section-title { justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+      .list { display: grid; gap: 12px; }
+      .agent, .event, .approval, .source {
+        padding: 16px; border: 1px solid rgba(255,255,255,.09); border-radius: 12px; background: rgba(255,255,255,.045);
+      }
+      .agent { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px; }
+      .agent-head { align-items: flex-start; gap: 14px; }
+      .avatar { flex: 0 0 auto; background: rgba(77,145,255,.14); color: #8cbcff; }
+      .agent-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 5px; }
+      .tools { display: flex; flex-wrap: wrap; gap: 7px; }
+      .tools span, .pill { display: inline-flex; align-items: center; min-height: 25px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 900; }
+      .tools span { background: rgba(255,255,255,.07); color: #c7d5ea; }
+      .good { background: rgba(46,196,182,.14); color: #65e4d7; }
+      .warn { background: rgba(255,209,102,.14); color: #ffd166; }
+      .stats { display: grid; gap: 8px; justify-items: end; color: #dce7f8; font-size: 13px; font-weight: 900; }
+      .event-meta { justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+      .severity { padding: 5px 8px; border-radius: 8px; font-size: 12px; font-weight: 950; }
+      .critical { background: rgba(255,92,122,.16); color: #ff8fa3; }
+      .high { background: rgba(255,209,102,.14); color: #ffd166; }
+      .medium { background: rgba(77,145,255,.14); color: #9ac3ff; }
+      .event p, .approval p { margin: 8px 0 12px; line-height: 1.5; }
+      .approval-actions { gap: 8px; margin-top: 14px; }
+      .cap-grid, .arch { display: grid; gap: 10px; }
+      .cap-grid { grid-template-columns: repeat(3, minmax(0,1fr)); margin-bottom: 18px; }
+      .arch { grid-template-columns: repeat(4, minmax(0,1fr)); }
+      .arch span {
+        display: grid; place-items: center; min-height: 64px; padding: 10px; border: 1px solid rgba(46,196,182,.18);
+        border-radius: 12px; background: rgba(46,196,182,.075); color: #dffdfa; font-size: 13px; font-weight: 950; text-align: center;
+      }
+      .budget {
+        display: grid; place-items: center; width: 190px; height: 190px; margin: 18px auto; border-radius: 50%;
+        background: radial-gradient(circle, #101722 58%, transparent 60%), conic-gradient(#2ec4b6 0deg 302deg, rgba(255,255,255,.09) 302deg 360deg);
+      }
+      .budget span { font-size: 34px; font-weight: 950; }
+      .budget small { width: 112px; color: #94a3b8; text-align: center; }
+      @media (max-width: 1180px) {
+        .shell, .hero-grid, .content-grid { grid-template-columns: 1fr; }
+        .sidebar { position: relative; height: auto; flex-direction: row; align-items: center; overflow-x: auto; }
+        .nav { display: flex; min-width: max-content; }
+        .tenant { margin-top: 0; min-width: 220px; }
+        .topbar { align-items: flex-start; }
+        .metrics, .arch { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      }
+      @media (max-width: 720px) {
+        .workspace { padding: 18px; }
+        .sidebar { padding: 16px; }
+        .topbar, .actions, .agent { display: grid; }
+        .search, .actions, .btn, .icon { width: 100%; }
+        .metrics, .cap-grid, .arch { grid-template-columns: 1fr; }
+        .hero { min-height: auto; padding: 24px; }
+        .stats { justify-items: start; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar">
+        <div class="brand"><div class="mark">AI</div><div><strong>AI Ops Hub</strong><span>Enterprise Control Plane</span></div></div>
+        <nav class="nav">
+          <button>Command Center</button><button>Agent Builder</button><button>Knowledge Base</button><button>Approvals</button><button>Streaming</button><button>Settings</button>
+        </nav>
+        <div class="tenant"><div class="mark">N</div><div><span>Tenant</span><strong>Northstar Health</strong></div></div>
+      </aside>
+      <section class="workspace">
+        <header class="topbar">
+          <div><p class="eyebrow">Production Command Center</p><h1>Autonomous agents with enterprise-grade control.</h1></div>
+          <div class="actions"><label class="search">Search <input placeholder="runs, agents, events" /></label><button class="icon">!</button><button class="btn primary">Deploy Agent</button></div>
+        </header>
+        <section class="hero-grid">
+          <div class="hero">
+            <div class="status"><span class="dot"></span>Live event stream active</div>
+            <h2>Kafka events are routed through policy-aware LangGraph agents.</h2>
+            <p>Each run retrieves tenant knowledge, evaluates confidence, estimates cost, and stops at approval gates before high-impact actions are executed.</p>
+            <div class="flow"><span class="chip">Kafka Event</span><span class="chip">LangGraph Agent</span><span class="chip">RAG + Rerank</span><span class="chip">Approval Gate</span><span class="chip">Audited Action</span></div>
+          </div>
+          <div class="insight">
+            <div class="panel-head"><span class="muted">Current RCA</span><strong>91% confidence</strong></div>
+            <p class="muted">Checkout latency matches a historical database pool saturation pattern. Recommended mitigation is staged worker restart plus pool-size inspection.</p>
+            <div class="bar"><span style="width:91%"></span></div>
+            <button class="btn secondary">View trace</button>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric"><span class="muted">Agent Requests</span><strong>1.28M</strong><small>+18.4% this week</small></div>
+          <div class="metric"><span class="muted">P95 Latency</span><strong>164ms</strong><small>36ms under SLO</small></div>
+          <div class="metric"><span class="muted">LLM Spend</span><strong>$42.18</strong><small>tenant budget healthy</small></div>
+          <div class="metric"><span class="muted">Approval SLA</span><strong>91.7%</strong><small>human loop on track</small></div>
+        </section>
+        <section class="content-grid">
+          <div class="panel">
+            <div class="section-title"><div><p class="eyebrow">Agent Builder</p><h3>Deployed enterprise agents</h3></div><button class="btn secondary">Tool Registry</button></div>
+            <div class="list">
+              <article class="agent"><div class="agent-head"><div class="avatar">AG</div><div><div class="agent-title"><strong>Incident Triage Agent</strong><span class="pill good">Deployed</span></div><p>SRE / Platform • Claude 3.5 + GPT-4o fallback</p><div class="tools"><span>Runbook RAG</span><span>SQL Diagnostics</span><span>PagerDuty MCP</span><span>Slack Draft</span></div></div></div><div class="stats"><span>97% success</span><span>142ms p95</span><span>$0.018/run</span></div></article>
+              <article class="agent"><div class="agent-head"><div class="avatar">AG</div><div><div class="agent-title"><strong>Revenue Risk Agent</strong><span class="pill good">Deployed</span></div><p>Finance Ops • GPT-4o mini</p><div class="tools"><span>Stripe Events</span><span>CRM Query</span><span>Anomaly Detector</span><span>Approval Gate</span></div></div></div><div class="stats"><span>94% success</span><span>188ms p95</span><span>$0.011/run</span></div></article>
+              <article class="agent"><div class="agent-head"><div class="avatar">AG</div><div><div class="agent-title"><strong>Support Escalation Agent</strong><span class="pill warn">Approval</span></div><p>Customer Support • Claude 3.5 Sonnet</p><div class="tools"><span>Zendesk Queue</span><span>Policy RAG</span><span>Tone Guardrail</span><span>Email Draft</span></div></div></div><div class="stats"><span>92% success</span><span>203ms p95</span><span>$0.024/run</span></div></article>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><div><p class="eyebrow">Approval Center</p><h3>Human loop</h3></div></div>
+            <div class="list">
+              <article class="approval"><strong>Restart checkout-worker deployment <span class="pill warn">High risk</span></strong><p>Agent found pool exhaustion pattern with 91% confidence.</p><small class="muted">May recover checkout latency; requires SRE approval.</small><div class="approval-actions"><button class="btn secondary">Review</button><button class="btn primary">Approve</button></div></article>
+              <article class="approval"><strong>Send proactive customer notice <span class="pill warn">Medium risk</span></strong><p>Three affected enterprise accounts meet escalation policy.</p><small class="muted">Draft created, waiting for support lead review.</small><div class="approval-actions"><button class="btn secondary">Review</button><button class="btn primary">Approve</button></div></article>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><div><p class="eyebrow">Live Stream</p><h3>Operational events</h3></div></div>
+            <div class="list">
+              <article class="event"><div class="event-meta"><span class="severity critical">Critical</span><small class="muted">12s ago</small></div><strong>Checkout API P95 crossed 800ms for enterprise tenant Northstar Health.</strong><p>Kafka: platform.latency routed to Incident Triage Agent</p></article>
+              <article class="event"><div class="event-meta"><span class="severity high">High</span><small class="muted">46s ago</small></div><strong>Payment retry failures up 23% after gateway deploy.</strong><p>Kafka: billing.failures routed to Revenue Risk Agent</p></article>
+              <article class="event"><div class="event-meta"><span class="severity medium">Medium</span><small class="muted">2m ago</small></div><strong>VIP customer opened third unresolved ticket in 24 hours.</strong><p>Kafka: support.tickets routed to Support Escalation Agent</p></article>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><div><p class="eyebrow">RAG Pipeline</p><h3>Retrieved sources</h3></div></div>
+            <div class="list">
+              <article class="source"><strong>Checkout Latency Runbook</strong><span> Markdown</span><div class="bar"><span style="width:94%"></span></div><small class="muted">94% relevance • 18 chunks</small></article>
+              <article class="source"><strong>Postgres Pool Saturation RCA</strong><span> PDF</span><div class="bar"><span style="width:91%"></span></div><small class="muted">91% relevance • 31 chunks</small></article>
+              <article class="source"><strong>Enterprise Escalation Policy</strong><span> Confluence</span><div class="bar"><span style="width:89%"></span></div><small class="muted">89% relevance • 12 chunks</small></article>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><div><p class="eyebrow">System Design</p><h3>Production architecture coverage</h3></div></div>
+            <div class="cap-grid"><span class="capability">Tenant-aware RBAC</span><span class="capability">pgvector retrieval</span><span class="capability">LLMOps telemetry</span><span class="capability">Tool contracts</span><span class="capability">SLO tracking</span><span class="capability">Risk guardrails</span></div>
+            <div class="arch"><span>Next.js UI</span><span>FastAPI Gateway</span><span>LangGraph Runtime</span><span>Kafka Topics</span><span>pgvector RAG</span><span>Redis Cache</span><span>Kubernetes</span><span>Terraform AWS</span></div>
+          </div>
+          <div class="panel">
+            <div class="section-title"><div><p class="eyebrow">FinOps</p><h3>Model cost policy</h3></div></div>
+            <div class="budget"><span>$42</span><small>of $50 monthly demo budget</small></div>
+            <p class="muted">Provider abstraction supports OpenAI, Anthropic, and Gemini-style routing with tenant budgets, fallback policy, and per-run token accounting.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
