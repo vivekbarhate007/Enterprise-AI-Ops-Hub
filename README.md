@@ -6,6 +6,24 @@ An interview-grade enterprise SaaS project that combines full-stack engineering,
 
 Enterprise AI Ops Hub lets teams configure autonomous AI agents that monitor real-time operational events, search internal knowledge, explain incidents, recommend actions, and request human approval before executing risky workflows.
 
+## Product Screenshots
+
+### Command center: agents, approvals, metrics, and RAG in one workspace
+
+![Enterprise AI Ops Hub command center with deployed agents, approval queue, operational metrics, and indexed documents](docs/screenshots/01-command-center-agents-approvals-rag.png)
+
+### Agent builder: run governed AI agents on live operational events
+
+![Agent builder with live event playground, release controls, approval gates, and agent runtime governance](docs/screenshots/02-agent-builder-run-governance.png)
+
+### Security center: tenant-scoped access, sessions, API keys, and audit stream
+
+![Security posture dashboard with tenant context, provider routing, RBAC role, active sessions, API key readiness, and audit events](docs/screenshots/03-security-posture-audit-stream.png)
+
+### Integrations: Slack, GitHub, and PagerDuty automation hooks
+
+![Integration dashboard showing Slack incident channel, GitHub issue automation, and PagerDuty incident trigger dry-run controls](docs/screenshots/04-integrations-slack-github-pagerduty.png)
+
 ## Architecture
 
 - **Frontend:** React, TypeScript, Vite, Tailwind-style CSS system, dashboard-first UX
