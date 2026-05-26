@@ -145,6 +145,3 @@ Then open `http://127.0.0.1:8080` and check API readiness at `http://127.0.0.1:8
 - `GET /api/v1/roi`
 - `GET /ready`
 
-## Why This Project Is Strong
-
-This is not a chatbot demo. It models how serious companies actually deploy AI: multi-tenant permissions, event streams, retrieval, model abstraction, cost governance, audit trails, approval workflows, and cloud-native operations.
